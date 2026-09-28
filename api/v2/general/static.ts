@@ -9,27 +9,27 @@ export function getStaticHome(env: string, folder: string) {
             case "development":
                 return "http://localhost:3000/public/product_images/"
             case "production":
-                return "https://minimart.app/public/product_images/"
+                return "https://jaspilite.app/public/product_images/"
             default:
-                return "https://minimart.app/public/product_images/"
+                return "https://jaspilite.app/public/product_images/"
         }
     } else if (folder === 'shop_images') {
         switch (env) {
             case "development":
                 return "http://localhost:3000/public/shop_images/"
             case "production":
-                return "https://minimart.app/public/shop_images/"
+                return "https://jaspilite.app/public/shop_images/"
             default:
-                return "https://minimart.app/public/shop_images/"
+                return "https://jaspilite.app/public/shop_images/"
         }
     } else if (folder === 'cache') {
         switch (env) {
             case "development":
                 return "http://localhost:3000/public/cache/"
             case "production":
-                return "https://minimart.app/public/cache/"
+                return "https://jaspilite.app/public/cache/"
             default:
-                return "https://minimart.app/public/cache/"
+                return "https://jaspilite.app/public/cache/"
         }
     }
 }

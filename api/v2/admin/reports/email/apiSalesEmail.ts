@@ -16,7 +16,7 @@ export const apiSalesEmail: CustomRquestHandler = (req, res, next) => {
         salesDetails += "<tr style='text-align: center;'><td>" + (i + 1) + "</td><td>" + sales[i].displayName + "</td><td>" + moment.unix(sales[i].date).format("DD/MM/YYYY") + "</td><td>" + (parseFloat(sales[i].total) + parseFloat(sales[i].delivery_charge) - parseFloat(sales[i].discount)).toFixed(2) + "</td><td>" + sales[i].status + "</td></tr>";
     }
     var mailOptions = {
-        from: 'Minimart Reports',
+        from: 'jaspilite Reports',
         to: 'sunoj.vijayan@gmail.com',
         subject: 'Daily - Sales Report',
         // text: 'Hello from node.js'

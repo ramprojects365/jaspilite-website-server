@@ -1,4 +1,4 @@
-import app from "../../../../../../minimart-server";
+import app from "../../../../../../jaspilite-server";
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
 chai.use(chaiHttp);
