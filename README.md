@@ -1,2 +1,2 @@
-# minimart-admin-server
-Minimart Admin Website - Node Code
+# jaspilite-admin-server
+Jaspilite Admin Website - Node Code

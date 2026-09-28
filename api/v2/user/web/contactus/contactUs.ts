@@ -15,7 +15,7 @@ var transporter = nodemailer.createTransport(
 export const apiContactUs: RequestHandler = async (req, res, next) => {
     responseLogger.print("Calling contact us send email..", req, res);
     var mailOptions = { 
-        from : 'sales@minimart.com', 
+        from: 'sales@jaspilite.com',
         to : 'sunoj.vijayan@gmail.com, nagaramaganga@gmail.com', 
         subject : req.body.subject, 
         text: "\n\nNew message from " + req.body.name + "\n\nNumber " + req.body.number + "\n\nEmail " + req.body.email + "\n\n Message " + req.body.message 

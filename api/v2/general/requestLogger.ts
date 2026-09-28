@@ -1,7 +1,7 @@
 import { CustomRquestHandler } from "../../../model/express";
 
 export const requestLogger: CustomRquestHandler = (req, res, next) => {
-    let options = {
+    const options: Intl.DateTimeFormatOptions = {
         weekday: 'long',
         year: 'numeric',
         month: 'short',

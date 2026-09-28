@@ -14,7 +14,7 @@ export const apiUpdateUser: RequestHandler = async (req, res, next) => {
     const userID = req.params.id;
     const password = req.body.password || "";
     bcrypt.hash(password, saltRounds, async (err, hash) => {
-        const filters = new UserUpdateFilters(req.body, req.body.password, hash);
+        const filters = new UserUpdateFilters(req.body, req.body.password || "", hash || "");
         var sqlQuery = "UPDATE adminusers SET " + filters.getCondition() + " WHERE id = ?";
         var queryData = [userID];
         try {

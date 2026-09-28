@@ -12,8 +12,8 @@ export const responseLogs: RequestHandler = (req, res, next) => {
 }
 
 export class responseLogger {
-    static print(text: string, req: any, res: any, ) {
-        let options = {
+    static print(text: string, req: any, res: any) {
+        const options: Intl.DateTimeFormatOptions = {
             weekday: 'long',
             year: 'numeric',
             month: 'short',
@@ -22,10 +22,13 @@ export class responseLogger {
             minute: '2-digit',
             second: '2-digit'
         };
-        if (req.user) {
-            Res.locals.logs.push("User: " + req.user.displayName + " - " + new Date().toLocaleString('en-IN', options) + " - " + req.method + " - " + req.originalUrl + " - " + text);
+        const targetRes = res || Res;
+        if (!targetRes.locals) targetRes.locals = {};
+        if (!targetRes.locals.logs) targetRes.locals.logs = [];
+        if (req && req.user) {
+            targetRes.locals.logs.push("User: " + (req.user.displayName || "Unknown") + " - " + new Date().toLocaleString('en-IN', options) + " - " + (req.method || "") + " - " + (req.originalUrl || "") + " - " + text);
         } else {
-            Res.locals.logs.push("User: Guest - " + new Date().toLocaleString('en-IN', options) + " - " + req.method + " - " + req.originalUrl + " - " + text);
+            targetRes.locals.logs.push("User: Guest - " + new Date().toLocaleString('en-IN', options) + " - " + (req ? req.method : "") + " - " + (req ? req.originalUrl : "") + " - " + text);
         }
     };
     static outputLog() {

@@ -8,7 +8,7 @@ import { ApiGetSalesCount } from "./apiGetSalesCount";
 import { ApiGetSalesTotal } from "./apiGetSalesTotal";
 import { ApiDeleteSale } from "./apiDeleteSale";
 import { ApiDeleteSalesItem } from "./apiDeleteSalesItem";
-import { ApiUpdateSaleItem } from "./apiUpdateSaleItem";
+import { ApiUpdateSaleItem } from "./ApiUpdateSaleItem";
 import { ApiGetSalesStatus } from "./apiGetSalesStatus";
 import { ApiDeleteSalesStatus } from "./apiDeleteSalesStatus";
 import { ApiUpdateSalesStatus } from "./apiUpdateSalesStatus";
