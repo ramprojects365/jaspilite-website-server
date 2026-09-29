@@ -15,6 +15,7 @@ export const mySqlPool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  multipleStatements: true,
 });
 /**
  * Execute Query Helper
@@ -24,7 +25,7 @@ export async function executeQuery<T = any>(
   params: any[] = [],
 ): Promise<T> {
   try {
-    const [rows] = await mySqlPool.execute(query, params);
+    const [rows] = await mySqlPool.query(query, params);
     return rows as T;
   } catch (error) {
     console.error("DB Query Error:", error);
