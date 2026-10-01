@@ -1,0 +1,100 @@
+{
+  "login_sadmin": {
+    "status": 200,
+    "user": {
+      "admin_id": 417,
+      "display_name": "Test Sadmin",
+      "user_type": "sadmin",
+      "email": "test.sadmin@jaspilite.com",
+      "status": "active"
+    }
+  },
+  "login_nadmin": {
+    "status": 200,
+    "user": {
+      "admin_id": 418,
+      "display_name": "Test Nadmin",
+      "user_type": "nadmin",
+      "email": "test.nadmin@jaspilite.com",
+      "status": "active"
+    }
+  },
+  "settings_nadmin": {
+    "status": 200,
+    "count": 317
+  },
+  "addUser_sadmin": {
+    "status": 200,
+    "user": {
+      "admin_id": 427,
+      "display_name": "Jaspilite Sadmin 2594",
+      "user_type": "sadmin",
+      "email": "sadmin_2594@jaspilite.com",
+      "status": "active"
+    }
+  },
+  "addUser_nadmin": {
+    "status": 200,
+    "user": {
+      "admin_id": 428,
+      "display_name": "Jaspilite Nadmin 2594",
+      "user_type": "nadmin",
+      "email": "nadmin_2594@jaspilite.com",
+      "status": "active"
+    }
+  },
+  "addShop_nadmin": {
+    "status": 200,
+    "shop": {
+      "shop_id": 199,
+      "shop_name": "Jaspilite Fresh Mart 2594",
+      "shop_addr": "Kuala Lumpur, Malaysia"
+    }
+  },
+  "addBranch_nadmin": {
+    "status": 200,
+    "branch": {
+      "shop_id": 199,
+      "branch_id": 318,
+      "branch_cat_id": 1,
+      "branch_name": "Jaspilite Brickfields 2594",
+      "latitude": "3.129225",
+      "longitude": "101.6861389",
+      "landmark": "Near KL Sentral",
+      "image": "test.jpg"
+    }
+  },
+  "addProduct_sadmin": {
+    "status": 200,
+    "product": {
+      "product_id": 13528,
+      "category_id": 1,
+      "company": "Jaspilite Naturals",
+      "name": "Jaspilite Organic Basmati Rice 2594",
+      "image": "test.jpg",
+      "description": "Premium aromatic royal basmati rice",
+      "weight": 5,
+      "sku": "SKU-2594"
+    }
+  },
+  "addCategory_sadmin": {
+    "status": 200,
+    "category": {
+      "category_id": 124,
+      "category_name": "Jaspilite Specialty 2594",
+      "category_icon": "FontAwsomeIcons.heart"
+    }
+  },
+  "costing_sadmin": {
+    "status": 200,
+    "total": 0
+  },
+  "sales_nadmin": {
+    "status": 200,
+    "salesList": 32372
+  },
+  "promotions_nadmin": {
+    "status": 200,
+    "count": 264
+  }
+}

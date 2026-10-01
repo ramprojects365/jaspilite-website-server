@@ -1,4 +1,4 @@
-import app from '../../../minimart-server';
+import app from '../../../jaspilite-server';
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 chai.use(chaiHttp);
@@ -11,7 +11,7 @@ describe('API - v2', () => {
       const res: Response = await request(app).get('/api/v2');
       expect(res).to.have.status(200);
       expect(res).to.be.a('object');
-      expect(res.text).to.eql("Welcome to Minimart Api Version 2.0");
+      expect(res.text).to.eql("Welcome to jaspilite Api Version 2.0");
     });
   });
 });

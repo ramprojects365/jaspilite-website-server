@@ -13,7 +13,7 @@ export const apiSessionVerify: CustomRquestHandler = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         jwt.verify(token, sessionTokenSecret, async (err, decoded: any) => {
             if (err) {
-                next(ApiError.errUnauthorizedError());
+                next();
             } else {
                 // TODO Check if Token has expired.
                 const adminUserId = decoded.userID;

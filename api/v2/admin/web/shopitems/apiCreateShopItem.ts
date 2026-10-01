@@ -46,7 +46,7 @@ export const ApiCreateShopItem: RequestHandler = async (req, res, next) => {
         const rows = await executeQuery(sqlQuery, queryData);
         responseLogger.print("Completed Create ShopItem...", req, res);
         res.json(PublicInfo.infoCreated({ category: new ShopItemSummary(newShopItem) }));
-    } catch (error) {
+    } catch (error: any) {
         responseLogger.print("Error Create ShopItem..." + error, req, res);
         if (error.toString().indexOf('Duplicate') !== -1) {
             return next(ApiError.errInDatabaseDuplicate(error));

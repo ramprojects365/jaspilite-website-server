@@ -24,7 +24,7 @@ routerV2.use(requestLogger);
 routerV2.use(apiValidation);
 
 routerV2.get("/", (req, res, next) => {
-    res.send("Welcome to Minimart Api Version 2.0 - " + req.app.get("env"));
+    res.send("Welcome to Jaspilite Api Version 2.0 - " + req.app.get("env"));
 });
 
 routerV2.use("/user", userRouter);

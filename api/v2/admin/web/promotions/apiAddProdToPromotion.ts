@@ -20,7 +20,7 @@ export const ApiAddProdToPromotion: RequestHandler = async (req, res, next) => {
     console.log(promoId);
     const newPromotionItem: dbModel.PromotionItem = {
         promo_items_id: promoItemsId,
-        promo_id: promoId || 0,
+        promo_id: promoId || "",
         shop_items_id: req.body.product_id || "",
         percentage: req.body.percentage || "",
     };

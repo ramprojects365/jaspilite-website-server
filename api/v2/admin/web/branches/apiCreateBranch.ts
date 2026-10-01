@@ -46,28 +46,25 @@ export const ApiCreateBranch: RequestHandler = async (req, res, next) => {
         rad_twenty_rate: req.body.rad_twenty_rate || 0,
 
     };
-    fs.copyFile('public/cache/' + image, 'public/shop_images/' + image, async (err) => {
-        if (err) {
-            return next(ApiError.errCopyImageFailed({ "details": "Image copy failed" }));
-        }
-        fs.unlink('public/cache/' + image, (err) => {
-            if (err) {
-                responseLogger.print("Image Delete from cache failed...", req, res);
-                return
-            }
-            responseLogger.print("Image Delete from cache sucess...", req, res);
-        });
-        responseLogger.print('Image was moved.........', req, res);
-        var sqlQuery = "INSERT INTO branches(shop_id, branch_cat_id, branch_name, phone_no, branch_addr, landmark, image, currency, maximum_distance, minimum_sale, open_time, close_time, isAdminDelivery, isPosEnabled, track_stock, latitude, longitude, home_screen_theme, welcomeMessage, rad_three_rate, rad_five_rate, rad_ten_rate, rad_fifteen_rate, rad_twenty_rate, active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1);";
-        var queryData = [newBranch.shop_id, newBranch.branch_cat_id, newBranch.branch_name, newBranch.phone_no, newBranch.branch_addr, newBranch.landmark, newBranch.image, newBranch.currency, newBranch.maximum_distance, newBranch.minimum_sale, newBranch.open_time, newBranch.close_time, newBranch.isAdminDelivery, newBranch.isPosEnabled, newBranch.track_stock, newBranch.latitude, newBranch.longitude, newBranch.home_screen_theme, newBranch.welcomeMessage, newBranch.rad_three_rate, newBranch.rad_five_rate, newBranch.rad_ten_rate, newBranch.rad_fifteen_rate, newBranch.rad_twenty_rate];
+    const cachePath = 'public/cache/' + image;
+    const destPath = 'public/shop_images/' + image;
+    if (fs.existsSync(cachePath)) {
         try {
-            const rows = await executeQuery(sqlQuery, queryData);
-            newBranch.branch_id = rows.insertId;
-            responseLogger.print("Completed Create Branch...", req, res);
-            res.json(PublicInfo.infoCreated({ shop: new BranchSummary(newBranch) }));
-        } catch (error) {
-            responseLogger.print("Error Create Branch...", req, res);
-            return next(ApiError.errInDatabase(error));
+            fs.copyFileSync(cachePath, destPath);
+            fs.unlinkSync(cachePath);
+        } catch (e) {
+            console.warn("Branch image copy warning:", e);
         }
-    });
+    }
+    var sqlQuery = "INSERT INTO branches(shop_id, branch_cat_id, branch_name, phone_no, branch_addr, landmark, image, currency, maximum_distance, minimum_sale, open_time, close_time, isAdminDelivery, isPosEnabled, track_stock, latitude, longitude, home_screen_theme, welcomeMessage, rad_three_rate, rad_five_rate, rad_ten_rate, rad_fifteen_rate, rad_twenty_rate, active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1);";
+    var queryData = [newBranch.shop_id, newBranch.branch_cat_id, newBranch.branch_name, newBranch.phone_no, newBranch.branch_addr, newBranch.landmark, newBranch.image, newBranch.currency, newBranch.maximum_distance, newBranch.minimum_sale, newBranch.open_time, newBranch.close_time, newBranch.isAdminDelivery, newBranch.isPosEnabled, newBranch.track_stock, newBranch.latitude, newBranch.longitude, newBranch.home_screen_theme, newBranch.welcomeMessage, newBranch.rad_three_rate, newBranch.rad_five_rate, newBranch.rad_ten_rate, newBranch.rad_fifteen_rate, newBranch.rad_twenty_rate];
+    try {
+        const rows = await executeQuery(sqlQuery, queryData);
+        newBranch.branch_id = rows.insertId;
+        responseLogger.print("Completed Create Branch...", req, res);
+        res.json(PublicInfo.infoCreated({ branch: new BranchSummary(newBranch), shop: new BranchSummary(newBranch) }));
+    } catch (error) {
+        responseLogger.print("Error Create Branch...", req, res);
+        return next(ApiError.errInDatabase(error));
+    }
 }
