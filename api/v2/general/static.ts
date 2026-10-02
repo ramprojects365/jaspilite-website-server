@@ -35,6 +35,12 @@ export function getStaticHome(env: string, folder: string) {
 }
 
 export function fileMapper(env: string, filename: string, folder: string) {
+    if (!filename) {
+        return "";
+    }
+    if (filename.startsWith("http://") || filename.startsWith("https://")) {
+        return filename;
+    }
     return getStaticHome(env, folder) + filename;
 }
 
