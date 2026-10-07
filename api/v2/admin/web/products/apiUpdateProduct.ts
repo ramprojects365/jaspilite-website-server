@@ -11,62 +11,40 @@ import { ProductSummary } from "../../../../../model/product/productSummary";
 export const ApiUpdateProduct: RequestHandler = async (req, res, next) => {
     responseLogger.print("Calling Update Product...", req, res);
     const productID = req.params.product_id;
-    const image = req.body.image.slice(req.body.image.lastIndexOf("/") + 1, req.body.image.length);
-    responseLogger.print("Image..." + image, req, res);
-    if (req.body.image_changed === false) {
-        req.body.image = image;
-        const filters = new ProductUpdateFilters(req.body);
-        var sqlQuery = "UPDATE products SET " + filters.getCondition() + " WHERE product_id = ?";
-        var queryData = [productID];
-        try {
-            const rows = await executeQuery(sqlQuery, queryData);
-            if (rows.changedRows == 0) {
-                responseLogger.print("Completed Update Product But no row updated...", req, res);
-                res.json(PublicInfo.infoNotUpdated({ info: "No Rows updated." }));
-            } else {
-                sqlQuery = "SELECT * FROM products WHERE product_id = ?";
-                queryData = [productID];
-                const product: dbModel.shops[] = await executeQuery(sqlQuery, queryData);
-                responseLogger.print("Completed Update Product...", req, res);
-                res.json(PublicInfo.infoUpdated({ product: new ProductSummary(product[0]) }));
-            }
-        } catch (error) {
-            responseLogger.print("Error Update Product...", req, res);
-            return next(ApiError.errInDatabase(error));
-        }
-    } else {
-        req.body.image = image;
-        fs.copyFile('public/cache/' + image, 'public/product_images/' + image, async (err) => {
-            if (err) {
-                return next(ApiError.errCopyImageFailed({ "details": "Image copy failed" }));
-            }
-            fs.unlink('public/cache/' + image, (err) => {
-                if (err) {
-                    responseLogger.print("Image Delete from cache failed...", req, res);
-                    return
-                }
-                responseLogger.print("Image Delete from cache sucess...", req, res);
-            });
-            responseLogger.print('Image was moved.........', req, res);
-            const filters = new ProductUpdateFilters(req.body);
-            var sqlQuery = "UPDATE products SET " + filters.getCondition() + " WHERE product_id = ?";
-            var queryData = [productID];
-            try {
-                const rows = await executeQuery(sqlQuery, queryData);
-                if (rows.changedRows == 0) {
-                    responseLogger.print("Completed Update Product But no row updated...", req, res);
-                    res.json(PublicInfo.infoNotUpdated({ info: "No Rows updated." }));
-                } else {
-                    sqlQuery = "SELECT * FROM products WHERE product_id = ?";
-                    queryData = [productID];
-                    const product: dbModel.shops[] = await executeQuery(sqlQuery, queryData);
-                    responseLogger.print("Completed Update Product...", req, res);
-                    res.json(PublicInfo.infoUpdated({ product: new ProductSummary(product[0]) }));
-                }
-            } catch (error) {
-                responseLogger.print("Error Update Product...", req, res);
-                return next(ApiError.errInDatabase(error));
-            }
-        });
+    let image = req.body.image || "";
+    if (image.includes("/")) {
+        image = image.slice(image.lastIndexOf("/") + 1);
     }
-}
+    responseLogger.print("Image..." + image, req, res);
+
+    if (req.body.image_changed !== false && image) {
+        const cachePath = 'public/cache/' + image;
+        const destPath = 'public/product_images/' + image;
+        if (fs.existsSync(cachePath)) {
+            try {
+                fs.copyFileSync(cachePath, destPath);
+                fs.unlinkSync(cachePath);
+                responseLogger.print('Image was moved from cache to product_images', req, res);
+            } catch (copyErr) {
+                console.warn('Image move warning (non-fatal):', copyErr);
+            }
+        }
+    }
+
+    req.body.image = image;
+    const filters = new ProductUpdateFilters(req.body);
+    const sqlQuery = "UPDATE products SET " + filters.getCondition() + " WHERE product_id = ?";
+    const queryData = [productID];
+
+    try {
+        await executeQuery(sqlQuery, queryData);
+        const selectQuery = "SELECT * FROM products WHERE product_id = ?";
+        const selectData = [productID];
+        const product: dbModel.shops[] = await executeQuery(selectQuery, selectData);
+        responseLogger.print("Completed Update Product...", req, res);
+        res.json(PublicInfo.infoUpdated({ product: new ProductSummary(product[0]) }));
+    } catch (error) {
+        responseLogger.print("Error Update Product...", req, res);
+        return next(ApiError.errInDatabase(error));
+    }
+};

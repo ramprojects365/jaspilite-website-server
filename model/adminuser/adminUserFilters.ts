@@ -36,9 +36,11 @@ export class UserUpdateFilters {
         const filterCondition = [
             this.display_name ? "displayName = " + mySqlPool.escape(this.display_name) : "",
             (this.user_type && this.user_type == 'sadmin') ? "user_type = 'sadmin'" : "",
+            (this.user_type && this.user_type == 'padmin') ? "user_type = 'padmin'" : "",
             (this.user_type && this.user_type == 'nadmin') ? "user_type = 'nadmin'" : "",
             (this.user_type && this.user_type == 'manager') ? "user_type = 'manager'" : "",
             (this.user_type && this.user_type == 'employee') ? "user_type = 'employee'" : "",
+            (this.user_type && this.user_type == 'api') ? "user_type = 'api'" : "",
             (this.plain_pass && this.plain_pass != "" ? "password = '" + this.hash + "'" : ""),
             this.status ? "status = " + mySqlPool.escape(this.status) : "",
         ];

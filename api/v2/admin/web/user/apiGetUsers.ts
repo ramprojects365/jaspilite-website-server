@@ -11,7 +11,7 @@ export const apiGetUsers: RequestHandler = async (req, res, next) => {
     responseLogger.print("Calling Get Users...", req, res);
     const filters = new AdminUserGetFilters(req.query);
     // var sqlQuery = 'SELECT a.*, b.branch_name FROM adminusers AS a INNER JOIN branches AS b ON a.branch_id = b.branch_id WHERE ' + filters.getCondition();
-    var sqlQuery = 'SELECT a.*, b.branch_name FROM adminusers AS a INNER JOIN branches AS b ON a.branch_id = b.branch_id WHERE ' + filters.getCondition() + ' UNION SELECT a.*, s.shop_name FROM adminusers AS a INNER JOIN shops AS s ON a.id = s.user_id WHERE ' + filters.getCondition() + ' UNION SELECT a.*, s.shop_name FROM adminusers AS a INNER JOIN shops AS s ON a.shop_id = s.shop_id WHERE '+ filters.getCondition() +' AND a.branch_id = 0';
+    var sqlQuery = 'SELECT a.*, COALESCE(b.branch_name, s.shop_name, "HQ / General") AS branch_name FROM adminusers AS a LEFT JOIN branches AS b ON a.branch_id = b.branch_id LEFT JOIN shops AS s ON (a.shop_id = s.shop_id OR a.id = s.user_id) WHERE ' + filters.getCondition() + ' GROUP BY a.id ORDER BY a.id DESC';
     try {
         const users: dbModel.adminusers[] = await executeQuery(sqlQuery);
         responseLogger.print("Completed Get Users...", req, res);
