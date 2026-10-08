@@ -1,5 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import * as fs from "fs";
+import * as path from "path";
 
 import { executeQuery } from "../../../../../db/db";
 import * as dbModel from "../../../../../db/model_created";
@@ -7,7 +8,8 @@ import { responseLogger } from "../../../general/responseLogs";
 import { PublicInfo, ApiError } from "../../../../../model/shared/messages";
 import { BranchUpdateFilters } from "../../../../../model/branch/branchFilters";
 import { BranchDetails } from "../../../../../model/branch/branchDetails";
-import { fileMapper } from "../../../general/static";
+import { fileMapper, getPublicDir } from "../../../general/static";
+
 
 export const ApiUpdateBranch: RequestHandler = async (req, res, next) => {
     responseLogger.print("Calling Update Branch...", req, res);
@@ -43,21 +45,22 @@ export const ApiUpdateBranch: RequestHandler = async (req, res, next) => {
     } else {
         //Image changed
         req.body.image = image;
-        fs.copyFile('public/cache/' + image, 'public/shop_images/' + image, async (err) => {
-            if (err) {
-                return next(ApiError.errCopyImageFailed({ "details": "Image copy failed" }));
+        const publicDir = getPublicDir();
+        const cachePath = path.resolve(publicDir, 'cache', image);
+        const destPath = path.resolve(publicDir, 'shop_images', image);
+        if (fs.existsSync(cachePath)) {
+            try {
+                fs.copyFileSync(cachePath, destPath);
+                fs.unlinkSync(cachePath);
+                responseLogger.print('Image was moved from cache to shop_images', req, res);
+            } catch (copyErr) {
+                console.warn('Branch image move warning (non-fatal):', copyErr);
             }
-            fs.unlink('public/cache/' + image, (err) => {
-                if (err) {
-                    responseLogger.print("Image Delete from cache failed...", req, res);
-                    return
-                }
-                responseLogger.print("Image Delete from cache sucess...", req, res);
-            });
-            responseLogger.print('Image was moved.........', req, res);
-            const filters = new BranchUpdateFilters(req.body);
-            var sqlQuery = "UPDATE branches SET " + filters.getCondition() + " WHERE branch_id = ?";
-            var queryData = [branchID];
+        }
+        const filters = new BranchUpdateFilters(req.body);
+        var sqlQuery = "UPDATE branches SET " + filters.getCondition() + " WHERE branch_id = ?";
+        var queryData = [branchID];
+
             try {
                 const rows = await executeQuery(sqlQuery, queryData);
                 if (rows.changedRows == 0) {
@@ -76,7 +79,5 @@ export const ApiUpdateBranch: RequestHandler = async (req, res, next) => {
                 responseLogger.print("Error Update Branch...", req, res);
                 return next(ApiError.errInDatabase(error));
             }
-        });
     }
-
-}
+};

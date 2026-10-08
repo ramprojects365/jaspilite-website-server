@@ -1,12 +1,15 @@
 import { RequestHandler } from "express-serve-static-core";
 import * as fs from "fs";
+import * as path from "path";
 
 import { responseLogger } from "../../../general/responseLogs";
 import { ApiError, PublicInfo } from "../../../../../model/shared/messages";
 import { executeQuery } from "../../../../../db/db";
 import * as dbModel from "../../../../../db/model_created";
 import { BranchSummary } from "../../../../../model/branch/branchSummary";
+import { getPublicDir } from "../../../general/static";
 import bodyParser = require("body-parser");
+
 
 export const ApiCreateBranch: RequestHandler = async (req, res, next) => {
     responseLogger.print("Calling Create Branch...", req, res);
@@ -46,8 +49,9 @@ export const ApiCreateBranch: RequestHandler = async (req, res, next) => {
         rad_twenty_rate: req.body.rad_twenty_rate || 0,
 
     };
-    const cachePath = 'public/cache/' + image;
-    const destPath = 'public/shop_images/' + image;
+    const publicDir = getPublicDir();
+    const cachePath = path.resolve(publicDir, 'cache', image);
+    const destPath = path.resolve(publicDir, 'shop_images', image);
     if (fs.existsSync(cachePath)) {
         try {
             fs.copyFileSync(cachePath, destPath);
@@ -56,6 +60,7 @@ export const ApiCreateBranch: RequestHandler = async (req, res, next) => {
             console.warn("Branch image copy warning:", e);
         }
     }
+
     var sqlQuery = "INSERT INTO branches(shop_id, branch_cat_id, branch_name, phone_no, branch_addr, landmark, image, currency, maximum_distance, minimum_sale, open_time, close_time, isAdminDelivery, isPosEnabled, track_stock, latitude, longitude, home_screen_theme, welcomeMessage, rad_three_rate, rad_five_rate, rad_ten_rate, rad_fifteen_rate, rad_twenty_rate, active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1);";
     var queryData = [newBranch.shop_id, newBranch.branch_cat_id, newBranch.branch_name, newBranch.phone_no, newBranch.branch_addr, newBranch.landmark, newBranch.image, newBranch.currency, newBranch.maximum_distance, newBranch.minimum_sale, newBranch.open_time, newBranch.close_time, newBranch.isAdminDelivery, newBranch.isPosEnabled, newBranch.track_stock, newBranch.latitude, newBranch.longitude, newBranch.home_screen_theme, newBranch.welcomeMessage, newBranch.rad_three_rate, newBranch.rad_five_rate, newBranch.rad_ten_rate, newBranch.rad_fifteen_rate, newBranch.rad_twenty_rate];
     try {
