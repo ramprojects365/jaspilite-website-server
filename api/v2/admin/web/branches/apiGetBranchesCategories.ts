@@ -13,11 +13,26 @@ export const ApiGetBranchesCategories: RequestHandler = async (req, res, next) =
     const filters = new BranchGetFilters(req.query);
     var sqlQuery = 'SELECT * FROM branches_category';
     try {
-        const branches: dbModel.branchCategory[] = await executeQuery(sqlQuery);
+        let branches: dbModel.branchCategory[] = await executeQuery(sqlQuery);
+        if (!branches || branches.length === 0) {
+            try {
+                await executeQuery(`
+                    INSERT INTO branches_category (category_id, category_name) VALUES
+                    (1, 'Groceries'),
+                    (2, 'Restaurants'),
+                    (3, 'Beauty'),
+                    (4, 'Electronics'),
+                    (5, 'Charity'),
+                    (6, 'Jewellery')
+                    ON DUPLICATE KEY UPDATE category_name = VALUES(category_name)
+                `);
+                branches = await executeQuery(sqlQuery);
+            } catch (seedErr) {
+                console.error("Auto-seed branches_category warning:", seedErr);
+            }
+        }
         responseLogger.print("Completed Get Branches Category...", req, res);
-        // To change image to full image path
-        // branches.map(item => item.image = fileMapper(req.app.get("env"), item.image, 'shop_images').toString());
-        res.json(PublicInfo.infoSendData({ categories: branches.map((item: dbModel.branchCategory) => new BranchCategorySummary(item)) }));
+        res.json(PublicInfo.infoSendData({ categories: (branches || []).map((item: dbModel.branchCategory) => new BranchCategorySummary(item)) }));
     } catch (error) {
         responseLogger.print("Error Get Branches Category...", req, res);
         return next(ApiError.errInDatabase(error));
