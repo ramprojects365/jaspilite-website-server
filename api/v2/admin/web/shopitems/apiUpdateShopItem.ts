@@ -17,7 +17,7 @@ export const ApiUpdateShopItem: RequestHandler = async (req, res, next) => {
     var queryData = [productId, branchIds];
     try {
         const rows = await executeQuery(sqlQuery, queryData);
-        if (rows.changedRows == 0) {
+        if (rows.affectedRows == 0) {
             responseLogger.print("Completed Update Shop Items But no row updated...", req, res);
             res.json(PublicInfo.infoNotUpdated({ info: "No Rows updated." }));
         } else {

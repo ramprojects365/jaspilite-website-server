@@ -44,15 +44,15 @@ export class ShopItemUpdateFilters {
     }
     getCondition() {
         const filterCondition = [
-            this.item_price ? "item_price = " + mySqlPool.escape(this.item_price) : "",
-            this.item_discount ? "item_discount = " + mySqlPool.escape(this.item_discount) : "",
-            this.remarks ? "remarks = " + mySqlPool.escape(this.remarks) : "",
-            this.item_qr_code ? "item_qr_code = " + mySqlPool.escape(this.item_qr_code) : "",
-            this.item_qr_code ? "item_qr_code = " + mySqlPool.escape(this.item_qr_code) : "",
-            this.articleNumber ? "articleNumber = " + mySqlPool.escape(this.articleNumber) : "",
-            this.max_items_per_order ? "max_items_per_order = " + mySqlPool.escape(this.max_quantity) : "",
-            (this.availability == true || this.availability === false) ? "availability = " + mySqlPool.escape(this.availability) : "",
-            (this.hidden == true || this.hidden === false) ? "hidden = " + mySqlPool.escape(this.hidden) : "",
+            this.item_price !== undefined && this.item_price !== null && this.item_price !== "" ? "item_price = " + mySqlPool.escape(this.item_price) : "",
+            this.item_discount !== undefined && this.item_discount !== null && this.item_discount !== "" ? "item_discount = " + mySqlPool.escape(this.item_discount) : "",
+            this.remarks !== undefined && this.remarks !== null ? "remarks = " + mySqlPool.escape(this.remarks) : "",
+            this.item_qr_code !== undefined && this.item_qr_code !== null ? "item_qr_code = " + mySqlPool.escape(this.item_qr_code) : "",
+            this.articleNumber !== undefined && this.articleNumber !== null ? "articleNumber = " + mySqlPool.escape(this.articleNumber) : "",
+            this.max_items_per_order !== undefined && this.max_items_per_order !== null && this.max_items_per_order !== "" ? "max_items_per_order = " + mySqlPool.escape(this.max_items_per_order) : "",
+            this.item_quantity !== undefined && this.item_quantity !== null && this.item_quantity !== "" ? "item_quantity = " + mySqlPool.escape(this.item_quantity) : "",
+            (this.availability === true || this.availability === false) ? "availability = " + mySqlPool.escape(this.availability) : "",
+            (this.hidden === true || this.hidden === false) ? "hidden = " + mySqlPool.escape(this.hidden) : "",
         ];
         return filterCondition.filter(Boolean).join(" , ");
     }

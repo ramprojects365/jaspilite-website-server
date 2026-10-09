@@ -35,13 +35,13 @@ export class ProductUpdateFilters {
     }
     getCondition() {
         const filterCondition = [
-            this.category_id ? "category_id = " + mySqlPool.escape(this.category_id) : true,
-            this.company ? "company = " + mySqlPool.escape(this.company) : true,
-            this.name ? "name = " + mySqlPool.escape(this.name) : true,
+            this.category_id ? "category_id = " + mySqlPool.escape(this.category_id) : "",
+            this.company ? "company = " + mySqlPool.escape(this.company) : "",
+            this.name ? "name = " + mySqlPool.escape(this.name) : "",
             this.image ? "image = " + mySqlPool.escape(this.image) : "",
-            this.description ? "description = " + mySqlPool.escape(this.description) : "",
-            this.weight ? "weight = " + mySqlPool.escape(this.weight) : "",
-            this.sku ? "sku = " + mySqlPool.escape(this.sku) : "",
+            this.description !== undefined && this.description !== null ? "description = " + mySqlPool.escape(this.description) : "",
+            this.weight !== undefined && this.weight !== null ? "weight = " + mySqlPool.escape(this.weight) : "",
+            this.sku !== undefined && this.sku !== null ? "sku = " + mySqlPool.escape(this.sku) : "",
         ];
         return filterCondition.filter(Boolean).join(" , ");
     }
